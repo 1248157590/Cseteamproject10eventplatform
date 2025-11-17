@@ -1,1 +1,1 @@
-# Cseteamproject10eventplatform
+# Csetermproject10eventplatform
