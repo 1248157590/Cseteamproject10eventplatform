@@ -1,102 +1,57 @@
-import os
-import sys
-
-# Proje dizinini Python yolu (path) için ekle
-# NOT: GitHub web arayüzünde bu satırlar çalışmaz, ancak yerel ortamınızda çalışacaktır.
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
-# Modülleri içe aktar
-from events import create_event, Event, Session
-from storage import load_state, save_state
-
-# --- Global Durum Değişkenleri ---
-# Tüm veriler bu listelerde tutulacak
-EVENTS = []
-ATTENDEES = []
-REGISTRATIONS = []
-DATA_DIR = "data"
-
-def initialize_system():
-    """Sistem başladığında tüm verileri diskten yükler."""
-    global EVENTS, ATTENDEES, REGISTRATIONS
-    print("Sistem başlatılıyor...")
+def run_week1_demo():
+    """
+    Python Workshop etkinliğini oluşturur.
+    """
+    global EVENTS # EVENTS listesini kullanmak için gereklidir
+    print("\n--- PYTHON WORKSHOP DEMOSU BAŞLATILIYOR ---")
     
-    # Tüm verileri yükle
-    try:
-        EVENTS, ATTENDEES, REGISTRATIONS = load_state(DATA_DIR)
-        print(f"Veriler başarıyla yüklendi. Yüklü olay sayısı: {len(EVENTS)}")
-    except Exception as e:
-        print(f"Veri yüklenirken bir hata oluştu: {e}. Boş listelerle devam ediliyor.")
-
-def save_system_state():
-    """Tüm verileri diske kaydeder."""
-    try:
-        save_state(DATA_DIR, EVENTS, ATTENDEES, REGISTRATIONS)
-        print("Sistem durumu başarıyla kaydedildi.")
-    except Exception as e:
-        print(f"Veri kaydedilirken bir hata oluştu: {e}")
-
-def organizer_menu():
-    """Organizatör için ana menü."""
-    while True:
-        print("\n--- Organizatör Ana Menüsü ---")
-        print("1. Yeni Olay Oluştur")
-        print("2. Mevcut Olayları Listele")
-        print("3. Çıkış ve Kaydet")
-        
-        choice = input("Seçiminizi girin: ")
-
-        if choice == '1':
-            handle_create_event()
-        elif choice == '2':
-            list_events()
-        elif choice == '3':
-            save_system_state()
-            print("Sistem kapatılıyor. İyi günler!")
-            break
-        else:
-            print("Geçersiz seçim. Lütfen tekrar deneyin.")
-
-def handle_create_event():
-    """Kullanıcıdan olay bilgilerini alır ve olayı oluşturur."""
-    print("\n--- Yeni Olay Oluşturma ---")
-    event_data = {}
+    # 1. PYTHON WORKSHOP Verisi
+    python_workshop_data = {
+        'name': "Python ile Veri Bilimi Workshop'u",
+        'location': "Çevrimiçi (Zoom)",
+        'start_date': "2026-11-20 10:00",
+        'end_date': "2026-11-20 17:00",
+        'capacity': 150,
+        'price': 499.00,
+        'description': "temel veri analizi."
+    }
     
-    # Kullanıcıdan giriş alma (Proje gereksinimi: Validation ve Exception Handling)
-    try:
-        event_data['name'] = input("Olay Adı: ")
-        event_data['location'] = input("Konum: ")
-        event_data['start_date'] = input("Başlangıç Tarihi (YYYY-MM-DD HH:MM): ")
-        event_data['end_date'] = input("Bitiş Tarihi (YYYY-MM-DD HH:MM): ")
-        event_data['capacity'] = int(input("Kapasite (Sayı): "))
-        event_data['price'] = float(input("Fiyat (Sayı): "))
-        event_data['description'] = input("Açıklama: ")
-    except ValueError:
-        print("Hata: Kapasite ve Fiyat sayısal bir değer olmalıdır.")
-        return
-
-    # events.py'deki fonksiyonu çağır
-    result = create_event(EVENTS, event_data)
+    # 2. Olayı Oluştur
+    result = create_event(EVENTS, python_workshop_data)
     
     if result["success"]:
-        print(f"Başarılı: '{result['event']['name']}' olayı oluşturuldu.")
-        # Olayı oluşturduktan sonra durumu otomatik kaydet
+        new_event = result["event"]
+        event_id = new_event['id']
+        print(f" Etkinlik Oluşturuldu: '{new_event['name']}' ({event_id[:8]}...)")
+        
+        # 3. Örnek Oturumları Oluştur ve Ekle
+        session1_data = {
+            'title': "Python Kurulumu ve Ortam Yönetimi",
+            'speaker': "Can Deniz",
+            'room': "Ana Salon (Online)",
+            'capacity': 150
+        }
+        session2_data = {
+            'title': "Veri Manipülasyonu",
+            'speaker': "Ayşe Can",
+            'room': "Ana Salon (Online)",
+            'capacity': 150
+        }
+        
+        add_session(EVENTS, event_id, session1_data)
+        add_session(EVENTS, event_id, session2_data)
+        
+        sessions = list_sessions(EVENTS, event_id)
+        print(f"   --> {len(sessions)} oturum eklendi. İlk oturum: '{sessions[0]['title']}'")
+        
+        # 4. Veriyi Kaydet (storage.py çağrılır)
         save_system_state() 
     else:
-        print(f"Hata: Olay oluşturulamadı. {result['error']}")
-
-def list_events():
-    """Mevcut olayları ve temel bilgilerini listeler."""
-    if not EVENTS:
-        print("Henüz oluşturulmuş bir olay bulunmamaktadır.")
-        return
+        print(f" DEMO BAŞARISIZ: {result['error']}")
         
-    print("\n--- Mevcut Olaylar ---")
-    for i, event in enumerate(EVENTS, 1):
-        print(f"{i}. Ad: {event['name']}, Konum: {event['location']}, Kapasite: {event['capacity']}, Fiyat: {event['price']:.2f} TL, ID: {event['id']}")
+    print("--- DEMO SONU ---\n")
 
-# --- Program Başlangıcı ---
-if __name__ == "__main__":
-    initialize_system() # Verileri yükle
-    organizer_menu()     # Organizatör menüsünü başlat
 
+       
+    
+    
