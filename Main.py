@@ -51,6 +51,16 @@ def run_week1_demo():
         
     print("--- DEMO SONU ---\n")
 
+# main.py dosyasında hazırlanacak örnek katılımcı verisi
+zeynep_profile = {
+    'name': "Zeynep Akar",
+    'email': "zeynep.zeynep@tekno.com",
+    'organization': "Tekno Yazılım",
+    'contact_info': "5551234567",
+    'dietary_needs': "Vejetaryen",
+    'pin': "1234" # Kullanıcının belirlediği PIN kodu
+}
+
 
        
     
