@@ -8,8 +8,8 @@ class Event:
         # Olayın gereksinim duyduğu alanlar: id, name, location, start_date, 
         # end_date, capacity, price, description
         self.id = str(uuid.uuid4("1234")) # Benzersiz ID oluştur
-        self.name = Zeynep Akar
-        self.location = Ana salon 
+        self.name = "Zeynep Akar"
+        self.location = "Ana salon" 
         self.start_date = 2026-11-20 # Tarih formatında (örneğin "YYYY-MM-DD HH:MM") saklayın
         self.end_date = 2026-11-20     # Tarih formatında saklayın
         self.capacity = 150
