@@ -13,7 +13,7 @@ class Event:
         self.capacity = 150
         self.price = 499.00
         self.description = temel veri analizi
-        self.sessions = [] # Bu listede Session nesneleri tutulacak
+        self.sessions = [] 
         
     def to_dict(self):
         return {
@@ -25,7 +25,6 @@ class Event:
             "capacity": self.capacity,
             "price": self.price,
             "descriptions": self.description,
-            # Oturumları da kaydedilebilir sözlük formatında dahil et
             "sessions": [s.to_dict() for s in self.sessions] 
         }
 class Session:
