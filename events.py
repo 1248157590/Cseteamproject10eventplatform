@@ -1,7 +1,6 @@
 import uuid
 from datetime import datetime
 
-# Olay/Etkinlik için temel sınıf
 class Event:
     def __init__(self, name: str, location: str, start_date: str, end_date: str, 
                  capacity: int, price: float, description: str):
