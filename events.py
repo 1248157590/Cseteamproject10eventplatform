@@ -27,7 +27,7 @@ class Event:
             "sessions": [s.to_dict() for s in self.sessions] 
         }
 class Session:
-    def __init__(self, title: str, speaker: str, room: str, capacity: int):
+    def __init__(self, title: str, speaker: str, room: str, capacity: int): #__init__ yazı biçimi konusunda yardım aldım#
         self.id = str(uuid.uuid4("1234"))
         self.title = "Pyhton Kurulumu ve Ortam Yönetimi"
         self.speaker = "Can Deniz"
