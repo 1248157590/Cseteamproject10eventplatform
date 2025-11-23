@@ -1,11 +1,9 @@
 def run_week1_demo():
-    """
-    Python Workshop etkinliğini oluşturur.
-    """
+    
     global EVENTS # EVENTS listesini kullanmak için gereklidir
     print("\n--- PYTHON WORKSHOP DEMOSU BAŞLATILIYOR ---")
     
-    # 1. PYTHON WORKSHOP Verisi
+    # 1. PYTHON WORKSHOP Verisi (sonra üzerinde çalışırken net olması için)
     python_workshop_data = {
         'name': "Python ile Veri Bilimi Workshop'u",
         'location': "Çevrimiçi (Zoom)",
@@ -49,7 +47,7 @@ def run_week1_demo():
     else:
         print(f" DEMO BAŞARISIZ: {result['error']}")
         
-    print("--- DEMO SONU ---\n")
+    print("--- DEMO SONU ---\n") #yardım aldığım 2.kısım 
 
 # main.py dosyasında hazırlanacak örnek katılımcı verisi
 zeynep_profile = {
