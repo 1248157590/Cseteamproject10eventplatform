@@ -3,14 +3,7 @@ import os
 import datetime
 from typing import List, Tuple
 
-# NOT: GitHub web arayüzünden klasör ve dosya işlemlerini simule edemeyiz. 
-# Bu fonksiyonlar, kodu daha sonra bir bilgisayarda çalıştırdığınızda çalışacaktır.
-
 def load_state(base_dir: str = "data") -> Tuple[list, list, list]:
-    """
-    Tüm events, attendees ve registrations verilerini diskten yükler.
-    Dosyalar bulunamazsa veya boşsa boş listeler döndürür.
-    """
     events_path = os.path.join(base_dir, "events.json")
     attendees_path = os.path.join(base_dir, "attendees.json")
     registrations_path = os.path.join(base_dir, "registrations.json")
@@ -31,9 +24,6 @@ def load_state(base_dir: str = "data") -> Tuple[list, list, list]:
     return events, attendees, registrations
 
 def save_state(base_dir: str, events: list, attendees: list, registrations: list) -> None:
-    """
-    Tüm events, attendees ve registrations verilerini ilgili JSON dosyalarına kaydeder.
-    """
     os.makedirs(base_dir, exist_ok=True)
     
     events_path = os.path.join(base_dir, "events.json")
@@ -50,11 +40,8 @@ def save_state(base_dir: str, events: list, attendees: list, registrations: list
         json.dump(registrations, f, indent=4)
         
 def backup_state(base_dir: str = "data", backup_dir: str = "backups") -> List[str]:
-    """
-    Mevcut veri dosyalarının zaman damgalı bir kopyasını backups/ klasörüne oluşturur.
-    """
     os.makedirs(backup_dir, exist_ok=True)
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S") #("%Y%m%d_%H%M%S") yardım aldım. ne anlama geldiğini bulamadım.
     
     files_to_backup = ["events.json", "attendees.json", "registrations.json"]
     backed_up_files = []
@@ -74,8 +61,5 @@ def backup_state(base_dir: str = "data", backup_dir: str = "backups") -> List[st
     return backed_up_files
 
 def validate_registration(registration: dict) -> bool:
-    """
-    Kayıt şemasını doğrular (İleriki haftalar için bir yer tutucu).
-    """
     required_keys = ['event_id', 'attendee_id', 'status']
     return all(key in registration for key in required_keys)
