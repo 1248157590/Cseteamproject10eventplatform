@@ -123,7 +123,7 @@ def run_registration_demo():
 
     # 2. Katılımcı Kaydı (attendees.py testi)
     zeynep_profile = {
-        'name': "Zeynep Akar", 'email': "zeynep.akar@techco.com", 'organization': "TechCo",
+        'name': "Zeynep Akar", 'email': "zeynep.zeynep@tekno.com", 'organization': "TechCo",
         'contact_info': "555123", 'pin': "1234"
     }
     attendee_result = register_attendee(ATTENDEES, zeynep_profile)
