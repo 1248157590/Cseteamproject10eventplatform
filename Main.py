@@ -196,6 +196,96 @@ if __name__ == "__main__":
     initialize_system()
     organizer_menu()
 
+import os
+import sys
+
+# Modülleri İçe Aktar
+from events import create_event, add_session, load_events, save_events
+from attendees import register_attendee, authenticate_attendee, load_attendees, save_attendees
+from registration import create_registration, promote_waitlist, cancel_registration, load_registrations, save_registrations
+# YENİ EKLENEN
+from checkin import check_in_attendee, list_checked_in_attendees, generate_badge, session_attendance
+from storage import backup_sate
+
+def staff_checkin_menu():
+    while True:
+        print("\n--- PERSONEL GİRİŞ MENÜSÜ ---")
+        print("1. Katılımcı Girişi (Check-In)")
+        print("2. Rozet Oluştur (Örnek)")
+        print("3. Giriş Yapanları Listele")
+        print("4. Geri Dön")
+        
+        choice = input("Seçiminizi girin: ")
+
+        if choice == '1':
+            registration_id = input("Giriş yapılacak kaydın ID'sini girin: ")
+            
+            result = check_in_attendee(REGISTRATIONS, registration_id)
+            if result["success"]:
+                print(f" Başarılı: Katılımcı {registration_id[:8]}... giriş yaptı.")
+                save_system_state()
+            else:
+                print(f" Hata: {result['error']}")
+                
+        elif choice == '2':
+            if not REGISTRATIONS or not ATTENDEES:
+                print("Lütfen önce bir kayıt oluşturun (Demo Seçeneği 2 ile).")
+                continue
+            
+            sample_reg = REGISTRATIONS[0]
+            sample_attendee = next((a for a in ATTENDEES if a['id'] == sample_reg['attendee_id']), None)
+            
+            if sample_attendee:
+                badge_path = generate_badge(sample_attendee, sample_reg)
+                print(f" Rozet Başarılı: {sample_attendee['name']} için rozet oluşturuldu.")
+                print(badge_path)
+            else:
+                 print("Örnek katılımcı bilgisi bulunamadı.")
+            
+        elif choice == '3':
+            event_id = input("Giriş yapanları görmek istediğiniz etkinliğin ID'sini girin: ")
+            checked_in = list_checked_in_attendees(REGISTRATIONS, event_id)
+            print(f"Toplam giriş yapan: {len(checked_in)}")
+            for reg in checked_in:
+                 print(f"  - Kayıt ID: {reg['id'][:8]}... | Giriş: {reg['check_in_time']}")
+            
+        elif choice == '4':
+            break
+        else:
+            print("Geçersiz seçim.")
+# main.py dosyasındaki organizer_menu fonksiyonu
+def organizer_menu():
+    while True:
+        print("\n==============================")
+        print(" ORGANİZATÖR ANA MENÜSÜ")
+        print("==============================")
+        print("1. Olay/Kayıt Yönetimi (Detaylı Menü)")
+        print("2. Haftalık Demo Testini Çalıştır (Kayıt ve Bekleme Listesi)")
+        print("3. **PERSONEL / CHECK-IN İŞLEMLERİ**") # son eklenenler 
+        print("4. Veri Yedekleme Oluştur")
+        print("5. Çıkış ve Kaydet") 
+        
+        choice = input("Seçiminizi girin: ")
+
+        if choice == '1':
+            print("Detaylı Yönetim Menüsü İleride Eklenecektir.")
+        elif choice == '2':
+            run_registration_demo()
+        elif choice == '3': # son eklenen
+            staff_checkin_menu()
+        elif choice == '4':
+            backup_state()
+            print("Yedekleme başarılı.")
+        elif choice == '5': 
+            save_system_state()
+            print("Sistem kapatılıyor. İyi günler!")
+            break
+        else:
+            print("Geçersiz seçim. Lütfen tekrar deneyin.")
+
+
+
+
        
     
     
