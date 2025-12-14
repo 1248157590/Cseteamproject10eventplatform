@@ -45,4 +45,47 @@ def generate_event_summary_report(event_id: str) -> dict
     
     return report
 
+def generate_attendee_status_report() -> List[Dict]: 
+    ATTENDEES = load_attendees()
+    REGISTRATIONS = load_registrations()
+    
+    attendee_status_list = []
+    
+    for attendee in ATTENDEES:
+        attendee_id = attendee['id']
+        
+        registrations_for_attendee = [
+            reg for reg in REGISTRATIONS if reg['attendee_id'] == attendee_id
+        ]
+        
+        if registrations_for_attendee:
+            events_status = [
+                {
+                    "registration_id": reg['id'][:8],
+                    "event_id": reg['event_id'][:8],
+                    "status": reg['status'],
+                    "check_in": "Yes" if reg.get('check_in_time') else "No"
+                }
+                for reg in registrations_for_attendee
+            ]
+            
+            attendee_status_list.append({
+                "attendee_name": attendee['name'],
+                "attendee_email": attendee['email'],
+                "registration_count": len(registrations_for_attendee),
+                "events_status": events_status
+            })
+            
+    return attendee_status_list
+
+
+def generate_full_system_report() -> Dict: 
+    return {
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "total_events": len(load_events()),
+        "total_attendees": len(load_attendees()),
+        "total_registrations": len(load_registrations())
+    }
+
+
 
