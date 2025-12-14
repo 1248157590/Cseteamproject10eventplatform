@@ -282,6 +282,111 @@ def organizer_menu():
             break
         else:
             print("Geçersiz seçim. Lütfen tekrar deneyin.")
+            
+# reports.py verilerini kaydetme
+
+import os
+import sys
+
+# Modülleri İçe Aktar
+from events import create_event, add_session, load_events, save_events
+from attendees import register_attendee, authenticate_attendee, load_attendees, save_attendees
+from registration import create_registration, promote_waitlist, cancel_registration, load_registrations, save_registrations
+from checkin import check_in_attendee, list_checked_in_attendees, generate_badge, session_attendance
+#reports.py den 
+from reports import generate_event_summary_report, generate_attendee_status_report, generate_full_system_report
+from storage import backup_state 
+
+def reporting_menu():
+    while True:
+        print("\n--- RAPORLAMA VE ANALİTİK MENÜSÜ ---")
+        print("1. Olay Özet Raporu (Gelir/Katılım)")
+        print("2. Katılımcı Durum Raporu (Tüm Kayıtlar)")
+        print("3. Genel Sistem Durum Raporu")
+        print("4. Geri Dön")
+
+        choice = input("Seçiminizi girin: ")
+
+        if choice == '1':
+            if not EVENTS:
+                print("Hata: Sistemde kayıtlı olay yok.")
+                continue
+            
+            event_id_to_report = EVENTS[0]['id']
+            report = generate_event_summary_report(event_id_to_report)
+            
+            if report:
+                print("\n*** OLAY ÖZET RAPORU ***")
+                print(f"Olay Adı: {report['event_name']}")
+                print(f"ID: {report['event_id']}")
+                for key, value in report['metrics'].items():
+                    print(f"- {key.replace('_', ' ').title()}: {value}")
+                print("************************")
+            else:
+                print("Rapor oluşturulamadı veya olay bulunamadı.")
+                
+        elif choice == '2':
+            report = generate_attendee_status_report()
+            print("\n*** KATILIMCI DURUM RAPORU ***")
+            if not report:
+                print("Kayıtlı katılımcı veya kayıt bulunamadı.")
+                continue
+            
+            for item in report:
+                print(f"\n> KATILIMCI: {item['attendee_name']} ({item['attendee_email']})")
+                print(f"  Toplam Kayıt: {item['registration_count']}")
+                for status in item['events_status']:
+                    print(f"  - Kayıt ID: {status['registration_id']}... | Durum: {status['status']} | Giriş Yaptı mı?: {status['check_in']}")
+            print("********************************")
+
+        elif choice == '3':
+            report = generate_full_system_report()
+            print("\n*** GENEL SİSTEM DURUMU ***")
+            print(f"Zaman Damgası: {report['timestamp']}")
+            print(f"- Toplam Olay Sayısı: {report['total_events']}")
+            print(f"- Toplam Kayıtlı Katılımcı: {report['total_attendees']}")
+            print(f"- Toplam Kayıt (Bilet): {report['total_registrations']}")
+            print("****************************")
+
+        elif choice == '4':
+            break
+        else:
+            print("Geçersiz seçim.")
+
+# main.py dosyasındaki organizer_menu fonksiyonu
+def organizer_menu():
+    while True:
+        print("\n==============================")
+        print(" ORGANİZATÖR ANA MENÜSÜ")
+        print("==============================")
+        print("1. Olay/Kayıt Yönetimi (Detaylı Menü)")
+        print("2. Haftalık Demo Testini Çalıştır")
+        print("3. Personel / Check-In İşlemleri")
+        print("4. **RAPORLAMA VE ANALİTİK**") # YENİ EKLENEN
+        print("5. Veri Yedekleme Oluştur") 
+        print("6. Çıkış ve Kaydet") 
+        
+        choice = input("Seçiminizi girin: ")
+
+        if choice == '1':
+            print("Detaylı Yönetim Menüsü İleride Eklenecektir.")
+        elif choice == '2':
+            run_registration_demo()
+        elif choice == '3':
+            staff_checkin_menu()
+        elif choice == '4': # YENİ EKLENEN
+            reporting_menu()
+        elif choice == '5': 
+            backup_state()
+            print("Yedekleme başarılı.")
+        elif choice == '6':
+            save_system_state()
+            print("Sistem kapatılıyor. İyi günler!")
+            break
+        else:
+            print("Geçersiz seçim. Lütfen tekrar deneyin.")
+
+
 
 
 
