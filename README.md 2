@@ -1,0 +1,21 @@
+ETKİNLİK KAYIT VE GİRİŞ PLATFORMU 
+bu proje, dönem öde i kapsamında geliştirilmiş bir etkinlik yönetim sistemidir. sistem; etkinlik oluşturma,katılımcı kaydı, biletleme,bekleme listesi yönetimi ve giriş(check-in) işlemlerini modüler bir yapıda sunar. 
+#Proje Modülü ve Dosya Yapısı 
+proje, modüler programlama prensiplerine uygun olarak 7 ana Python dosyasından olışmaktadır.
+**main.py** ana menü ve sistemin yönetim merkezi
+**events.py** etkinlik ve oturum oluşturma işlemleri
+**attendees.py** katılımcı kayıt ve profil yönetimi
+**registration.py** kapasite kontrolü, biletleme ve bekleme listesi yönetimi
+**checkin.py** etkinlik günü giriş işlemleri ve rozet(badge) üretimi 
+**storage.py** veri yedekleme ve doğrulama işlemleri 
+**reports.py** gelir ve katılım analizi raporları 
+
+Kurulum ve Çalıştırma 
+1.proje dosyalarını indirin 
+2.terminal veya komut satırını açın
+3.Python main.py komutu ile programı başlatın 
+
+Kullanılan teknolojiler 
+-python 3.x
+-JSON
+-UUID VE Hashlib
